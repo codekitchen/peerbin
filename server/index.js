@@ -4,7 +4,7 @@ var server = require('http').createServer(),
     wss = require('express-ws')(app, server),
     fac = require('./facilitator.js')();
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/../public'));
 
 app.ws('/connect', function(ws, req) {
   ws.on('message', function(inputStr) {
