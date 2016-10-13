@@ -1,5 +1,6 @@
 cloudgate:
-  required_version: '~> 4.0.0'
+  required_version: '~> 3.3.0'
+
 app:
   name: peerbin
   environment: dev
@@ -20,6 +21,7 @@ app:
       min_size: 1
       max_size: 1
       health_check_path: /health_check
+      ssl_cert_arn: "arn:aws:iam::307761260553:server-certificate/sentry.insops.net_20161210"
 
   load_balancers:
     web:
