@@ -20,3 +20,7 @@ app:
       min_size: 1
       max_size: 1
       health_check_path: /health_check
+
+  load_balancers:
+    web:
+      ssl_cert_arn: "arn:aws:iam::636161780776:server-certificate/star.inscloudgate.net_20170209"
