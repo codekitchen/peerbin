@@ -8,6 +8,10 @@ var server = require('http').createServer(),
 
 app.use(express.static(__dirname + '/../public'));
 
+app.get('/health_check', function(req, res) {
+  res.json({ status: "👍" });
+});
+
 app.ws('/connect', function(ws, req) {
   ws.on('message', function(inputStr) {
     var input = JSON.parse(inputStr);

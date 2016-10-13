@@ -1,0 +1,22 @@
+cloudgate:
+  required_version: '~> 4.0.0'
+app:
+  name: peerbin
+  environment: dev
+  deploy_group: PeerBinDeployUsers
+  region: us-east-1
+  vpc_cluster: inscloudgate-prod
+
+  users:
+    brianp:
+      name: Brian Palmer
+      email: brianp@instructure.com
+      ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtCPFMhCL/4Zb69MZlsndONJD68TOTHs3J+V00rLbsAcQhRDMFpweRBk5cl2bos8aMpUSBOSl+NQ6pMKWrAJwcheKZjrRqsQEx/uTN8oY5znQ7W2l9S1L/0jTjPP2xoaZaeKRUq3bkhxy9mzao1YLn1FOv9+QQMcBhLeSnUWB7otTRzqt5lk6YkWxZ6iSgMtfWhauKy1KWeYvRnB+HYyfDRn74eRaN33CfUDZqb0ZzS6vBXQOH90svSQaPsIcCVj/U0sPWyv31zeZMdKCZZL9WVLwL8dQeafSKOzOSp3bRNGVKv6veQsTi7a5o3LuvCfVAWvYbXVdRDRsHxYVGZBSSw==
+
+  instance_pools:
+    web:
+      flavor: web
+      instance_type: m4.large
+      min_size: 1
+      max_size: 1
+      health_check_path: /health_check
