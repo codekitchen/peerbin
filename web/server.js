@@ -51,6 +51,9 @@ export default class Server {
           this.clients[clientId] = rtcdatachannel
           this.onclientconnect(clientId)
         }
+        rtcdatachannel.onclose = () => {
+          delete this.clients[clientId]
+        }
         rtcdatachannel.onerror = this.onerror
       }
       rtcpeerconn.onicecandidate = (event) => {
