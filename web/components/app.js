@@ -50,10 +50,7 @@ export default class App extends React.Component {
         </GridCol></GridRow>
         <GridRow><GridCol>
           { this.props.errorMessage ?
-            <div>
-              <Alert variant="error">{ this.props.errorMessage }</Alert>
-              <p><Link href="/">Start a new PeerBin</Link></p>
-            </div>
+          <Alert variant="error">{ this.props.errorMessage }</Alert>
             :
           <TextArea label={ this.props.isServer ? "Your secrets:" : "Message:" } resize="vertical"
             width="100%" height="10em"
@@ -68,6 +65,9 @@ export default class App extends React.Component {
         </GridCol></GridRow>
         <GridRow><GridCol>
         { this.props.isServer && shareLink }
+        { !this.props.isServer &&
+          <p><Link href="/">Start a new PeerBin</Link></p>
+        }
         </GridCol></GridRow>
       </Grid>
     )
