@@ -1,7 +1,7 @@
 {
-  "name": "textdrop",
+  "name": "peerbin",
   "version": "1.0.0",
-  "description": "",
+  "description": "p2p secret sharing app using WebRTC",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
