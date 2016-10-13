@@ -18,6 +18,9 @@ export default class Client {
     var message = JSON.parse(input.data)
     console.log('got message', message)
 
+    if (message.type === 'error') {
+      this.onerror(message.message)
+    }
     if (message.type === 'answer') {
       var answer = new RTCSessionDescription(message)
       this.rtcpeerconn.setRemoteDescription(answer, function() {/* handler required but we have nothing to do */}, this.onerror);
@@ -28,7 +31,7 @@ export default class Client {
     }
   }
 
-  onerror = () => {
+  onerror = (message) => {
   }
 
   onicecandidate = (event) => {

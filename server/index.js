@@ -1,3 +1,5 @@
+"use strict";
+
 var server = require('http').createServer(),
     express = require('express'),
     app = express(),
@@ -11,11 +13,14 @@ app.ws('/connect', function(ws, req) {
     var input = JSON.parse(inputStr);
     if (input.inst === 'host') {
       var roomId = fac.host(ws);
+      ws.on('close', function() {
+        fac.unhost(roomId);
+      });
       ws.send(JSON.stringify({ inst: 'hosting', roomId: roomId }));
     } else if (input.inst === 'join') {
       fac.join(input.roomId, ws, input.message);
     } else if (input.inst === 'send') {
-      fac.send(input.roomId, input.clientId, input.message);
+      fac.send(input.roomId, input.clientId, ws, input.message);
     }
   });
 });

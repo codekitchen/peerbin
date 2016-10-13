@@ -1,6 +1,7 @@
+"use strict";
+
 var uuid = require('node-uuid');
 
-// TODO: nothing ever gets cleaned up, here.
 var Facilitator = function() {
   this.rooms = {};
 };
@@ -11,27 +12,38 @@ Facilitator.prototype.host = function host(ws) {
   return roomId;
 }
 
+Facilitator.prototype.unhost = function unhost(roomId) {
+  var room = this.rooms[roomId];
+  delete this.rooms[roomId]
+  for (let clientId of Object.keys(room.clients)) {
+    room.clients[clientId].close();
+  }
+}
+
 Facilitator.prototype.join = function join(roomId, ws, offerMsg) {
   var room = this.rooms[roomId];
   if (!room) {
-    throw new Error("Room does not exist: `" + roomId + "`");
+    ws.send(JSON.stringify({ type: 'error', message: 'ROOM_NO_EXIST' }))
+    return;
   }
   var clientId = uuid.v4();
   room.clients[clientId] = ws;
   room.host.send(JSON.stringify({ type: 'join', clientId: clientId, offer: offerMsg }));
 }
 
-Facilitator.prototype.send = function send(roomId, clientId, message) {
+Facilitator.prototype.send = function send(roomId, clientId, clientWs, message) {
   var room = this.rooms[roomId];
   if (!room) {
-    throw new Error("Room does not exist: `" + roomId + "`");
+    clientWs.send(JSON.stringify({ type: 'error', message: 'ROOM_NO_EXIST' }))
+    return;
   }
   var ws = room.host;
   if (clientId) {
     ws = room.clients[clientId];
   }
   if (!ws) {
-    throw new Error("Client does not exist: `" + clientId + "`");
+    clientWs.send(JSON.stringify({ type: 'error', message: 'CLIENT_NO_EXIST' }))
+    return;
   }
   ws.send(JSON.stringify(message));
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Heading, TextArea, Button, Grid, GridRow, GridCol, Link } from 'instructure-ui'
+import { Heading, TextArea, Button, Grid, GridRow, GridCol, Link, Alert } from 'instructure-ui'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -22,36 +22,53 @@ export default class App extends React.Component {
       var shareLink = <p></p>
     } else if (this.props.shareLink) {
       var shareLink =
-        <GridRow><GridCol>
+        <div>
           <p>While this page remains open, the data will be available to others at this URL:</p>
           <p><Link href={this.props.shareLink}>{this.props.shareLink}</Link></p>
           <p>Once you close this page, the data is gone for good.</p>
-        </GridCol></GridRow>
+        </div>
     } else {
       var shareLink =
-        <GridRow><GridCol>
-          <p>Configuring p2p channel...</p>
-        </GridCol></GridRow>
+        <p>Configuring p2p channel...</p>
+    }
+
+    var textAreaProps = {
+    }
+    if (!this.props.isServer) {
+      textAreaProps.value = this.props.sharedText
     }
 
     return(
       <Grid>
         <GridRow><GridCol>
-          <Heading level="h1">TextDrop</Heading>
+          <Heading level="h1">PeerBin</Heading>
+          { this.props.isServer &&
           <p>
             Send sensitive data to others over a peer-to-peer connection. The data is encrypted in transit, and sent directly from your browser to the recipient&rsquo;s without going through any server.
           </p>
+          }
         </GridCol></GridRow>
         <GridRow><GridCol>
-          <TextArea label="Your secrets:" resize="vertical"
+          { this.props.errorMessage ?
+            <div>
+              <Alert variant="error">{ this.props.errorMessage }</Alert>
+              <p><Link href="/">Start a new PeerBin</Link></p>
+            </div>
+            :
+          <TextArea label={ this.props.isServer ? "Your secrets:" : "Message:" } resize="vertical"
             width="100%" height="10em"
-            placeholder="My password is 1234"
-            onChange={this.textChanged} />
+            placeholder={ this.props.isServer ? "My password is 1234" : "Waiting for message..." }
+            onChange={this.textChanged} {...textAreaProps} />
+          }
         </GridCol></GridRow>
         <GridRow><GridCol>
+        { this.props.isServer && !this.props.errorMessage &&
           <Button isBlock disabled={this.state.text.length < 1} variant="primary" onClick={this.submitText}>Share</Button>
+        }
         </GridCol></GridRow>
-        {shareLink}
+        <GridRow><GridCol>
+        { this.props.isServer && shareLink }
+        </GridCol></GridRow>
       </Grid>
     )
   }
