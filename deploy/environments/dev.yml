@@ -1,12 +1,12 @@
 cloudgate:
-  required_version: '~> 3.3.0'
+  required_version: '~> 4.0.0'
 
 app:
   name: peerbin
   environment: dev
   deploy_group: PeerBinDeployUsers
-  region: us-east-1
-  vpc_cluster: inscloudgate-prod
+  region: us-west-2
+  vpc_cluster: inseng-dev
 
   users:
     brianp:
@@ -20,9 +20,10 @@ app:
       instance_type: m4.large
       min_size: 1
       max_size: 1
-      health_check_path: /health_check
-      ssl_cert_arn: "arn:aws:iam::307761260553:server-certificate/sentry.insops.net_20161210"
+      health_check_path: '/health_check'
+      http_port: 80
+      https_port: 80
 
   load_balancers:
     web:
-      ssl_cert_arn: "arn:aws:iam::636161780776:server-certificate/star.inscloudgate.net_20170209"
+      ssl_cert_arn: "arn:aws:iam::830473435438:server-certificate/star.inseng.net_20190620"
