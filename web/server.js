@@ -1,10 +1,10 @@
-import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, makePeer } from './rtc.js'
+import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, makePeer, getWs } from './rtc.js'
 
 export default class Server {
   connect(hostingCb) {
     this.hostingCb = hostingCb;
 
-    this.websocket = new WebSocket('ws://' + window.location.hostname + ':' + window.location.port + '/connect')
+    this.websocket = getWs()
     this.websocket.onmessage = this.gotMessage
 
     this.websocket.onopen = () => {

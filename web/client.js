@@ -1,4 +1,4 @@
-import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, makePeer } from './rtc.js'
+import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, makePeer, getWs } from './rtc.js'
 
 export default class Client {
   constructor(roomId) {
@@ -9,7 +9,7 @@ export default class Client {
 
   connect(textCb) {
     this.textCb = textCb
-    this.websocket = new WebSocket('ws://' + window.location.hostname + ':' + window.location.port + '/connect')
+    this.websocket = getWs()
     this.websocket.onmessage = this.gotMessage
     this.websocket.onopen = this.createOffer
   }

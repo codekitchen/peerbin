@@ -9,4 +9,10 @@ function makePeer() {
   )
 }
 
-export { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, makePeer }
+function getWs() {
+  var protocol = window.location.protocol
+  var wsproto = protocol === 'https:' ? 'wss:' : 'ws:'
+  return new WebSocket(wsproto + '//' + window.location.hostname + ':' + window.location.port + '/connect')
+}
+
+export { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, makePeer, getWs }
