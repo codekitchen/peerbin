@@ -23,6 +23,9 @@ app:
       health_check_path: '/health_check'
       http_port: 80
       https_port: 80
+      env_vars:
+        NGINX_WORKER_COUNT: '1'
+        PASSENGER_MAX_POOL_SIZE: '1'
 
   load_balancers:
     web:
