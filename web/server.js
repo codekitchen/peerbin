@@ -62,10 +62,11 @@ export default class Server {
       var offer = new RTCSessionDescription(message.offer);
 
       var rtcpeerconn = makePeer()
+      this.clients[clientId] = { rtcpeerconn }
       rtcpeerconn.ondatachannel = (event) => {
         var rtcdatachannel = event.channel
+        this.clients[clientId].rtcdatachannel = rtcdatachannel
         rtcdatachannel.onopen = () => {
-          this.clients[clientId] = { rtcdatachannel, rtcpeerconn }
           this.onclientconnect(clientId)
         }
         rtcdatachannel.onclose = () => {
