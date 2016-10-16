@@ -33,7 +33,7 @@ if (!RTCPeerConnection) {
 } else if (window.location.hash.length > 1) {
   var roomId = window.location.hash.slice(1)
   appState.isServer = false
-  var client = new Client(roomId)
+  var client = window.client = new Client(roomId)
 
   client.onerror = (error) => {
     appState.errorMessage = "There was an error communicating with the host."
@@ -48,7 +48,7 @@ if (!RTCPeerConnection) {
     renderApp()
   })
 } else {
-  var server = new Server()
+  var server = window.server = new Server()
 
   server.onclientconnect = (clientId) => {
     server.sendMessage(clientId, appState.text)

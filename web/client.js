@@ -26,6 +26,7 @@ export default class Client {
       this.rtcpeerconn.setRemoteDescription(answer, function() {/* handler required but we have nothing to do */}, this.onerror);
     }
     if (this.rtcpeerconn.remoteDescription && message.candidate) {
+      console.log('adding ice candidate', message)
       // ignore ice candidates until remote description is set
       this.rtcpeerconn.addIceCandidate(new RTCIceCandidate(message.candidate))
     }

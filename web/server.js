@@ -51,6 +51,7 @@ export default class Server {
     if (message.candidate) {
       var client = this.clients[message.clientId]
       if (client && client.rtcpeerconn.remoteDescription ) {
+        console.log('adding ice candidate', message)
         // ignore ice candidates until remote description is set
         client.rtcpeerconn.addIceCandidate(new RTCIceCandidate(message.candidate))
       }
@@ -74,6 +75,7 @@ export default class Server {
       }
       rtcpeerconn.onicecandidate = (event) => {
         if (!event || !event.candidate) return;
+        console.log('got ice candidate', event.candidate)
         this.websocket.send(JSON.stringify({
           inst: 'send',
           roomId: this.roomId,
