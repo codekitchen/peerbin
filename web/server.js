@@ -21,7 +21,7 @@ export default class Server {
   onclientconnect = (clientId) => {}
 
   sendMessage(clientId, text) {
-    var rtcdatachannel = this.clients[clientId]
+    var rtcdatachannel = this.clients[clientId].rtcdatachannel
     if (!rtcdatachannel) return
     rtcdatachannel.send(text)
   }
@@ -34,10 +34,26 @@ export default class Server {
 
   gotMessage = (input) => {
     var message = JSON.parse(input.data)
+    console.log("got message", message)
 
     if (message.inst === 'hosting') {
       this.roomId = message.roomId;
       this.hostingCb(this.roomId);
+    }
+
+    if (message.type === 'answer') {
+      var client = this.clients[message.clientId]
+      if (client) {
+        var answer = new RTCSessionDescription(message)
+        client.rtcpeerconn.setRemoteDescription(answer, function() {/* handler required but we have nothing to do */}, this.onerror);
+      }
+    }
+    if (message.candidate) {
+      var client = this.clients[message.clientId]
+      if (client && client.rtcpeerconn.remoteDescription ) {
+        // ignore ice candidates until remote description is set
+        client.rtcpeerconn.addIceCandidate(new RTCIceCandidate(message.candidate))
+      }
     }
 
     if (message.type === 'join') {
@@ -48,7 +64,7 @@ export default class Server {
       rtcpeerconn.ondatachannel = (event) => {
         var rtcdatachannel = event.channel
         rtcdatachannel.onopen = () => {
-          this.clients[clientId] = rtcdatachannel
+          this.clients[clientId] = { rtcdatachannel, rtcpeerconn }
           this.onclientconnect(clientId)
         }
         rtcdatachannel.onclose = () => {

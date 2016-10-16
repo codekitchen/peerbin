@@ -28,6 +28,7 @@ Facilitator.prototype.join = function join(roomId, ws, offerMsg) {
   }
   var clientId = uuid.v4();
   room.clients[clientId] = ws;
+  ws._peerbinClientId = clientId;
   room.host.send(JSON.stringify({ type: 'join', clientId: clientId, offer: offerMsg }));
 }
 
@@ -40,6 +41,8 @@ Facilitator.prototype.send = function send(roomId, clientId, clientWs, message) 
   var ws = room.host;
   if (clientId) {
     ws = room.clients[clientId];
+  } else {
+    message.clientId = clientWs && clientWs._peerbinClientId;
   }
   if (!ws) {
     clientWs.send(JSON.stringify({ type: 'error', message: 'CLIENT_NO_EXIST' }))
